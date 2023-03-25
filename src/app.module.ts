@@ -1,10 +1,30 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import {} from 'typeorm'
+import { dataSourceConfig } from './config/data.source';
+import {ConfigModule} from '@nestjs/config'
+import { EnvConfiguration } from './config/env.config';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [EnvConfiguration]
+    })
+    ,
+
+    TypeOrmModule.forRoot({
+      ...dataSourceConfig
+    })
+
+    
+
+  ],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    console.log(EnvConfiguration().portdb)
+  }
+}
