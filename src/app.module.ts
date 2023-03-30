@@ -7,18 +7,10 @@ import { EnvConfiguration } from './config/env.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [EnvConfiguration]
-    })
-    ,
-
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       ...dataSourceConfig
     })
-
-    
-
   ],
   controllers: [],
   providers: [],

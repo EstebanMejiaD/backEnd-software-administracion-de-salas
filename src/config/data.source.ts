@@ -6,12 +6,12 @@ import {EnvConfiguration} from '../config/env.config'
 
 export const dataSourceConfig: DataSourceOptions = {
     type: 'postgres',
-    host: EnvConfiguration().hostdb, 
+    database: EnvConfiguration().namedb,
     port: EnvConfiguration().portdb,
     // solucionar el problema de las variables de entorno: no deja poner el username_db ni password_db
     username: 'postgres',
     password: 'ADMIN12345',
-    database: EnvConfiguration().namedb,
+    host: EnvConfiguration().hostdb, 
     entities: [__dirname + '/../**/**/*.entity{.ts, .js}'],
     migrations: [__dirname + '/../../migrations/*{.ts, .js}'],
     synchronize: false,
