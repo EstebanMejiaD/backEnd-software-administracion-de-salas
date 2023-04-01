@@ -1,4 +1,4 @@
-import {PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Entity} from 'typeorm'
+import {PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn} from 'typeorm'
 
 
 
@@ -19,8 +19,4 @@ export abstract class BaseEntity {
         name: 'update_at',
     })
     updateAt: Date;
-
-    
-
-
 }
