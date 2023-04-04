@@ -1,38 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Usuario } from './entities/usuario.entity';
+import { Usuario } from '../entities/usuario.entity';
 import { Repository } from 'typeorm';
+import { TipoDocuento } from 'src/entities';
 
 @Injectable()
 export class UsuariosService {
 
 
-  constructor(
 
+  constructor(
     @InjectRepository(Usuario)
-    private readonly usuarioRepository: Repository<Usuario>
+    private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(TipoDocuento)
+    private readonly tipoDocumentoRepository: Repository<TipoDocuento>
   ) {}
 
 
   async create(createUsuarioDto: CreateUsuarioDto) {
     
+      const id = createUsuarioDto.tipoDocumento
 
-    try {
-        const nuevoUsuario = this.usuarioRepository.create(createUsuarioDto)
 
-        await this.usuarioRepository.save(nuevoUsuario)
+      const tipoDocumento = await this.tipoDocumentoRepository.findOne( { where: {id} })
 
-          return nuevoUsuario
-    } catch (error) {
-      console.log(error)
-    }
+      if (tipoDocumento) {
+          
+        const newUsuario = this.usuarioRepository.create(createUsuarioDto)
 
+        newUsuario.tipoDocumento = tipoDocumento
+
+        await this.usuarioRepository.save(newUsuario)
+        return newUsuario
+      }
   }
 
   findAll() {
-    return `This action returns all usuarios`;
+    return this.usuarioRepository.find();
   }
 
   findOne(id: number) {

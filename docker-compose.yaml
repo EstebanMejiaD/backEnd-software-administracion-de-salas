@@ -9,6 +9,9 @@ services:
       POSTGRES_PASSWORD: ${PASSWORD_DB}
       POSTGRES_DB: ${NAME_DB}
     volumes:
-      - /var/lib/postgres/data
+      - postgres:/var/lib/postgres/data
     ports:
       - ${PORT_DB}:${PORT_DB}
+volumes:
+  postgres:
+    driver: local

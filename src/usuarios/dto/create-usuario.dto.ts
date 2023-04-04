@@ -1,4 +1,4 @@
-import { IsString, MinLength, IsNotEmpty, IsEmail, Matches, IsNumber, IsOptional} from 'class-validator'
+import { IsString, MinLength, IsNotEmpty, IsEmail, Matches, IsNumber, IsOptional, IsUUID} from 'class-validator'
 
 export class CreateUsuarioDto {
 
@@ -34,12 +34,14 @@ export class CreateUsuarioDto {
     documento: number
 
     // // esta es la relacion con la tabla tipo de documento es decir se le pasa el uuid de el tipo de documento fijo
-    // tipoDocumento: string
+    @IsString()
+    @IsUUID()
+    tipoDocumento: string
 
     // // esta es la relacion con la tabla tipo de usuario es decir se le pasa el uuid de el tipo de ususario fijo: estudiante, docentes y administradores de salas
     // tipoUsuario: string
 
     @IsOptional()
-    estado?: number
+    estado?: boolean
 
 }
