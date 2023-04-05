@@ -34,11 +34,13 @@ export class Usuario  {
 
   @Column('text', {
     nullable: false,
+    select: false
   })
   contraseña: string;
 
   @Column('int', {
     nullable: false,
+    unique:true
   })
   documento: number;
 
@@ -54,7 +56,13 @@ export class Usuario  {
   // @ManyToOne()
   // tipoUsuario: string
 
-  @Column({
+  @Column('text', {
+    array: true,
+    default: ['user']
+  })
+  role: string[];
+
+  @Column('bool',{
     default: true,
   })
   estado?: boolean;
