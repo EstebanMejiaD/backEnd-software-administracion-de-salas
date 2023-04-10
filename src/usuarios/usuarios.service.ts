@@ -28,7 +28,7 @@ export class UsuariosService {
 
 
   // esta es la funcion de servicio para poder crear usuarios de tipo Estudiante
-  async create(createUsuarioDto: CreateUsuarioDto) {
+  async crearUsuarioEstudiante(createUsuarioDto: CreateUsuarioDto) {
     
      try {
       const id = createUsuarioDto.tipoDocumento

@@ -14,11 +14,15 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   controllers: [UsuariosController],
   providers: [UsuariosService, JwtStrategy],
   imports: [
+    
     ConfigModule,
+
     TypeOrmModule.forFeature([Usuario, TipoDocuento]),
+
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
+
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -28,11 +32,12 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         return {
           secret: configService.get('JWT_SECRET'),
           signOptions: {
-            expiresIn: '2h',
+            expiresIn: '7d',
           },
         };
       },
     }),
+
     // JwtModule.register({
     //   secret: process.env.JWT_SECRET,
     //   signOptions: {
@@ -40,6 +45,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     //   }
     // })
   ],
+
   exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule]
 })
 export class UsuariosModule {}

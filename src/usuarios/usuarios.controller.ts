@@ -1,11 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete , UseGuards, Req, SetMetadata} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport'
 import { UsuariosService } from './usuarios.service';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { CreateUsuarioDto, LoginUsuarioDto } from './dto';
-import {AuthGuard} from '@nestjs/passport'
 import { Usuario } from 'src/entities';
 import { RawHeaders, GetUser} from './decorators';
 import { UserRoleGuard } from './guards/user-role.guard';
+import { RoleProtected } from './decorators/role-protected.decorator';
+import { ValidRoles } from './interfaces';
+import { Auth } from './decorators/auth.decorator';
 
 
 @Controller('usuarios')
@@ -16,8 +19,8 @@ export class UsuariosController {
     ) {}
 
   @Post('register')
-  createUser(@Body() createUsuarioDto: CreateUsuarioDto) {
-    return this.usuariosService.create(createUsuarioDto);
+  crearUsuarioEstudiante(@Body() createUsuarioDto: CreateUsuarioDto) {
+    return this.usuariosService.crearUsuarioEstudiante(createUsuarioDto);
   }
 
 
@@ -47,19 +50,31 @@ export class UsuariosController {
    }
 
 
-  // ruta privada de ejemplo para usar el concepto de autorizacion por token y roles
+   // ruta privada de ejemplo para usar el concepto de autorizacion por token y roles
+   //  @SetMetadata('roles', ['admin', 'super-user'])
+
+
    @Get('private2')
-   @SetMetadata('roles', ['admin', 'super-user'])
+   @RoleProtected( ValidRoles.estudiante,  )
    @UseGuards( AuthGuard(), UserRoleGuard )
-   privateRoute2(
-    @GetUser() user: Usuario,
-
-   ) {
-
+   privateRoute2(@GetUser() user: Usuario,) {
     return {
       ok: true,
       user,
     
+    }
+   }
+
+    // ruta privada de ejemplo para usar el concepto de autorizacion por token y roles
+   //  @SetMetadata('roles', ['admin', 'super-user'])
+
+
+   @Get('private3')
+   @Auth(ValidRoles.superUser)
+   privateRoute3(@GetUser() user: Usuario,) {
+    return {
+      ok: true,
+      user,
     }
    }
 

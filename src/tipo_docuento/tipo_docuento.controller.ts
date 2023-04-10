@@ -2,12 +2,16 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TipoDocuentoService } from './tipo_docuento.service';
 import { CreateTipoDocuentoDto } from './dto/create-tipo_docuento.dto';
 import { UpdateTipoDocuentoDto } from './dto/update-tipo_docuento.dto';
+import { Auth } from '../usuarios/decorators/auth.decorator';
+import { ValidRoles } from 'src/usuarios/interfaces';
 
 @Controller('tipo-docuento')
 export class TipoDocuentoController {
   constructor(private readonly tipoDocuentoService: TipoDocuentoService) {}
 
+
   @Post()
+  @Auth(ValidRoles.superUser)
   create(@Body() createTipoDocuentoDto: CreateTipoDocuentoDto) {
     return this.tipoDocuentoService.create(createTipoDocuentoDto);
   }

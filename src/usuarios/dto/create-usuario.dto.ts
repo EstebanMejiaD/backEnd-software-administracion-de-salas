@@ -41,7 +41,8 @@ export class CreateUsuarioDto {
     // // esta es la relacion con la tabla tipo de usuario es decir se le pasa el uuid de el tipo de ususario fijo: estudiante, docentes y administradores de salas
     // tipoUsuario: string
 
-    @IsOptional()
-    estado?: boolean
+    // solo los super-administradores pueden modificar el estado
+    // @IsOptional()
+    // estado?: boolean
 
 }
