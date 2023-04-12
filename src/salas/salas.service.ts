@@ -2,21 +2,25 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { CreateSalaDto } from './dto/create-sala.dto';
 import { UpdateSalaDto } from './dto/update-sala.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Sala } from 'src/entities';
+import { Sala, Usuario } from 'src/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class SalasService {
 
   constructor(
-
     @InjectRepository(Sala)
-    private readonly salasRepository: Repository<Sala>
+    private readonly salasRepository: Repository<Sala>,
+    @InjectRepository(Usuario)
+    private readonly usuariosRepository: Repository<Usuario>,
+    
   ) {}
 
-  async createSala(createSalaDto: CreateSalaDto) {
+  // necesitas crear salas con usuario relacionado, el que la creó
+  async createSala(createSalaDto: CreateSalaDto, usuario: Usuario) {
     try {
-
+        console.log(usuario)
+   
       const nuevaSala = this.salasRepository.create(createSalaDto)
 
       await this.salasRepository.save(nuevaSala)
@@ -27,8 +31,10 @@ export class SalasService {
     }
   }
 
- async  obtenerSalas() {
-    return await this.salasRepository.find();
+  // necesitas retornar unicamente las salas que esten en estado true
+  // las que estan en false no estan disponibles
+   async obtenerSalas() {
+      return await this.salasRepository.find()
   }
 
   async findOne(id: string) {
@@ -43,8 +49,6 @@ export class SalasService {
       throw new NotFoundException('La sala que estas buscando, no está disponible')
 
     return sala
-   
-
   }
 
   update(id: number, updateSalaDto: UpdateSalaDto) {

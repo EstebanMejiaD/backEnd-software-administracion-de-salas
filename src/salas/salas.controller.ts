@@ -2,8 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SalasService } from './salas.service';
 import { CreateSalaDto } from './dto/create-sala.dto';
 import { UpdateSalaDto } from './dto/update-sala.dto';
-import { Auth } from 'src/usuarios/decorators';
+import { Auth, GetUser } from 'src/usuarios/decorators';
 import { ValidRoles } from 'src/usuarios/interfaces';
+import { Usuario } from 'src/entities';
 
 @Controller('salas')
 export class SalasController {
@@ -11,8 +12,8 @@ export class SalasController {
 
   @Post('crear-sala')
   @Auth( ValidRoles.admin, ValidRoles.superUser)
-  createSala(@Body() createSalaDto: CreateSalaDto) {
-    return this.salasService.createSala(createSalaDto);
+  createSala(@Body() createSalaDto: CreateSalaDto, @GetUser() usuario: Usuario) {
+    return this.salasService.createSala(createSalaDto, usuario);
   }
 
   @Get('obtener-salas')

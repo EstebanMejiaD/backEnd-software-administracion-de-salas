@@ -11,6 +11,9 @@ export class CreateSalaDto {
     descripcion?: string;
 
 
+
+
+
     // @IsDate({message: 'La fecha de inicio debe ser un date valido'})
     // @IsOptional({message: 'La fecha es opcional, por ahora, cambiarlo'})
     // availableStartTime?: Date;
