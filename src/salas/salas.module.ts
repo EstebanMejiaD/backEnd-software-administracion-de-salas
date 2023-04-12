@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SalasService } from './salas.service';
 import { SalasController } from './salas.controller';
-import { Sala, Usuario } from 'src/entities';
+import { Sala, TipoSala, Usuario } from 'src/entities';
 import { UsuariosModule } from 'src/usuarios/usuarios.module';
 
 @Module({
@@ -12,7 +12,8 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
   imports: [
     TypeOrmModule.forFeature([
       Sala,
-      Usuario
+      Usuario,
+      TipoSala
     ]),
     UsuariosModule
   ]

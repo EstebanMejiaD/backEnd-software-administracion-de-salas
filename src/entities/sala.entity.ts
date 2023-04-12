@@ -1,4 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { TipoSala } from './tipo-sala.entity';
+import { Usuario } from './usuario.entity';
+
 
 @Entity({ name: 'sala' })
 export class Sala {
@@ -24,6 +27,23 @@ export class Sala {
 
   // @Column({ type: 'timestamp' })
   // availableEndTime: Date;
+
+  // esta es la relacion de muchos para los tipos de salas
+  @ManyToOne(()=> TipoSala, (tipoSala) => tipoSala.salas, {eager:true})
+  @JoinColumn({name: 'tipoSala'})
+  tipoSala: TipoSala | string;
+
+
+
+  /**
+   * Esta es la relacion de muchos a uno es decir una sala solo puede ser creada por un usuario
+   */
+  @ManyToOne(
+    ()=> Usuario,
+    (usuario)=> usuario.sala,
+    {eager: true}
+  )
+  usuario: Usuario
 
   @Column('bool',{
     default: true,

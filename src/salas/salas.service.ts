@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { CreateSalaDto } from './dto/create-sala.dto';
 import { UpdateSalaDto } from './dto/update-sala.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Sala, Usuario } from 'src/entities';
+import { Sala, TipoSala, Usuario } from 'src/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -11,21 +11,33 @@ export class SalasService {
   constructor(
     @InjectRepository(Sala)
     private readonly salasRepository: Repository<Sala>,
-    @InjectRepository(Usuario)
-    private readonly usuariosRepository: Repository<Usuario>,
+    @InjectRepository(TipoSala)
+    private readonly tipoSalaRepository: Repository<TipoSala>,
     
   ) {}
 
-  // necesitas crear salas con usuario relacionado, el que la creó
-  async createSala(createSalaDto: CreateSalaDto, usuario: Usuario) {
+  // Está lista la creacion de sala con usuario relaiconado y con sala relacionada
+  async createSala(createSalaDto: CreateSalaDto, user: Usuario) {
     try {
-        console.log(usuario)
-   
-      const nuevaSala = this.salasRepository.create(createSalaDto)
 
-      await this.salasRepository.save(nuevaSala)
+        const { tipoSala,usuario, ...resData} = createSalaDto
+        const id = tipoSala
 
-      return nuevaSala;
+        const isTipoSala = await this.tipoSalaRepository.findOne({where: {id}})
+
+        if(isTipoSala) {
+          const nuevaSala = this.salasRepository.create(
+            { ...resData, usuario: user
+             }
+           )
+
+           nuevaSala.tipoSala = isTipoSala
+     
+           await this.salasRepository.save(nuevaSala)
+     
+           return nuevaSala;
+        }
+     
     } catch (error) {
       this.handleDBErrors(error)
     }

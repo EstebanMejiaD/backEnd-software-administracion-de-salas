@@ -1,4 +1,5 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { TipoSala, Usuario } from 'src/entities';
 
 export class CreateSalaDto {
 
@@ -11,7 +12,12 @@ export class CreateSalaDto {
     descripcion?: string;
 
 
+    usuario: Usuario
 
+
+    @IsString()
+    @IsUUID()
+    tipoSala: string
 
 
     // @IsDate({message: 'La fecha de inicio debe ser un date valido'})

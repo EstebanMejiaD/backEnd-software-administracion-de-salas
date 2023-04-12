@@ -6,6 +6,7 @@ import {ConfigModule} from '@nestjs/config'
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { TipoDocuentoModule } from './tipo_docuento/tipo_docuento.module';
 import { SalasModule } from './salas/salas.module';
+import { TipoSalasModule } from './tipo-salas/tipo-salas.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { SalasModule } from './salas/salas.module';
     }),
     UsuariosModule,
     TipoDocuentoModule,
-    SalasModule
+    SalasModule,
+    TipoSalasModule
   ],
   controllers: [],
   providers: [],

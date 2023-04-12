@@ -6,8 +6,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   JoinColumn,
-  ManyToOne
+  ManyToOne,
+  OneToMany
 } from 'typeorm';
+import { Sala } from './sala.entity';
+import { TipoSala } from './tipo-sala.entity';
 
 
 @Entity({ name: 'usuario' })
@@ -45,11 +48,24 @@ export class Usuario  {
   documento: number;
 
   // tipo de documento esta es una relacion con una tabla de tipos de documentos:
-  @ManyToOne(()=> TipoDocuento, (tipoDocuento) => tipoDocuento.usuarios)
+  @ManyToOne(()=> TipoDocuento, (tipoDocuento) => tipoDocuento.usuarios, {eager: true})
   @JoinColumn({name: 'tipoDocumento'})
   tipoDocumento: TipoDocuento | string;
 
 
+  // esta es la relacion que tiene el usuario con la sala, uno a muchos, un usuario puede crear muchas salas
+  @OneToMany(
+    ()=> Sala, 
+    (sala) => sala.usuario
+  )
+  sala: Sala
+
+  // esta es la relacion que tiene el usuario con el tipo de sala, uno a muchos, un usuario puede crear muchos tipos de salas
+  @OneToMany(
+    ()=> TipoSala, 
+    (tipoSala) => tipoSala.usuario
+  )
+  tipoSala: TipoSala
 
 
   // tipo de usuario o rol, es una relacion con una tabla de tipo de usuario o rol
