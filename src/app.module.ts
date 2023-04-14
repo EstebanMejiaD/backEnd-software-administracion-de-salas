@@ -22,4 +22,8 @@ import { TipoSalasModule } from './tipo-salas/tipo-salas.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor () {
+    console.log(dataSourceConfig)
+  }
+}

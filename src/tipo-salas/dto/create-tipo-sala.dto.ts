@@ -9,8 +9,7 @@ export class CreateTipoSalaDto {
     @IsNotEmpty({message: 'El nombre no puede ser vacío'})
     nombre: string
 
-    @IsOptional()
-    estado?: boolean
+    
 
     usuario: Usuario
 

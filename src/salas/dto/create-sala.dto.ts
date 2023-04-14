@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumberString, IsOptional, IsString, IsUUID} from 'class-validator';
 import { TipoSala, Usuario } from 'src/entities';
 
 export class CreateSalaDto {
