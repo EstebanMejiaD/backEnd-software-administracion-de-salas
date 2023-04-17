@@ -23,16 +23,16 @@ export class TipoSalasController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.tipoSalasService.findOne(+id);
+    return this.tipoSalasService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTipoSalaDto: UpdateTipoSalaDto) {
-    return this.tipoSalasService.update(+id, updateTipoSalaDto);
+    return this.tipoSalasService.update(id, updateTipoSalaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tipoSalasService.remove(+id);
+    return this.tipoSalasService.remove(id);
   }
 }

@@ -3,6 +3,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import {EnvConfiguration} from '../config/env.config'
 import * as entities from '../entities'
 
+console.log(process.env.PORT_DB)
+
 
 export const dataSourceConfig: DataSourceOptions = {
     type: 'postgres',
@@ -12,7 +14,7 @@ export const dataSourceConfig: DataSourceOptions = {
     username: 'postgres',
     password: 'ADMIN12345',
     host: EnvConfiguration().hostdb, 
-    // entities: [__dirname + '/../entities/*.entity{.ts, .js}'],
+    // entities: [__dirname + '/../../../src/entities/*.entity{.ts, .js}'],
     entities: Object.values(entities),
     migrations: [__dirname + '/../../migrations/*{.ts, .js}'],
     synchronize: true,

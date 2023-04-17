@@ -7,4 +7,5 @@ export const EnvConfiguration = () => ({
     usernamedb: process.env.USERNAME_DB,
     passworddb: process.env.PASSWORD_DB,
     namedb: process.env.NAME_DB,
+    basePath: process.env.BASE_PATH
 })

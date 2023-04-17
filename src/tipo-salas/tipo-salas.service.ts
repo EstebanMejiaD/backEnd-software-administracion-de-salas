@@ -35,15 +35,15 @@ export class TipoSalasService {
     return `This action returns all tipoSalas`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} tipoSala`;
   }
 
-  update(id: number, updateTipoSalaDto: UpdateTipoSalaDto) {
+  update(id: string, updateTipoSalaDto: UpdateTipoSalaDto) {
     return `This action updates a #${id} tipoSala`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} tipoSala`;
   }
 }

@@ -44,4 +44,6 @@ export class TipoSala {
     })
     updateAt?: Date;
 
+   
+
 }
