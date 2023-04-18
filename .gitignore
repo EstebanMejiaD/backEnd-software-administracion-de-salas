@@ -4,6 +4,7 @@
 /migrations
 .env
 # ormconfig.ts
+ormconfig copy.ts
 # Logs
 logs
 *.log
