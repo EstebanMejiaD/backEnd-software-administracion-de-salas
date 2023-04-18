@@ -64,15 +64,24 @@ npm run start:dev
 5. Ahora puedes probar la aplicacion con las rutas que se te presentan en la consola que donde está corriendo el servidor.
 
 
+6. Clona el archivo ormconfig copy.ts y renombralo ormconfig.ts pasa así hacer lo que se le dice dentro del archivo
 
 * Comandos especiales para hacer migraciones:
+
+Para generarla:
 ```
-npm run m:gen -- ./migrations/init
-```
-```
-npm run m:run
+npm run migrations:generate ./migrations/init
 ```
 
+Para correr la ultima migracion
+```
+npm run migrations:run   
+```
+
+Para revertir la ultima migracion: 
+```
+npm run migrations:revert
+```
 
 
 
