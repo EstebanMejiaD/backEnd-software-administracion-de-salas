@@ -3,7 +3,7 @@
 /node_modules
 /migrations
 .env
-ormconfig.ts
+# ormconfig.ts
 # Logs
 logs
 *.log
