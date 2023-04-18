@@ -49,9 +49,8 @@ export class SalasService {
       return await this.salasRepository.find()
   }
 
-  async findOne(id: string) {
+  async findOne(id: string){
     
-   
       const sala = await this.salasRepository.findOneBy({id})
 
       if (!sala)

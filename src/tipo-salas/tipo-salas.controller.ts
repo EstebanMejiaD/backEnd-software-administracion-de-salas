@@ -10,29 +10,33 @@ import { Usuario } from 'src/entities';
 export class TipoSalasController {
   constructor(private readonly tipoSalasService: TipoSalasService) {}
 
-  @Post()
+  @Post('Crear')
   @Auth( ValidRoles.admin, ValidRoles.superUser )
   create(@Body() createTipoSalaDto: CreateTipoSalaDto, @GetUser() user: Usuario) {
     return this.tipoSalasService.create(createTipoSalaDto, user);
   }
 
-  @Get()
+  @Get('Obtener')
   findAll() {
     return this.tipoSalasService.findAll();
   }
 
-  @Get(':id')
+  @Get('/Obtener-uno/:id')
   findOne(@Param('id') id: string) {
     return this.tipoSalasService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('/Actualizar/:id')
+  @Auth( ValidRoles.admin, ValidRoles.superUser )
   update(@Param('id') id: string, @Body() updateTipoSalaDto: UpdateTipoSalaDto) {
     return this.tipoSalasService.update(id, updateTipoSalaDto);
   }
+  
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tipoSalasService.remove(id);
+  //cambiar estado:
+  @Delete('/Eliminar/:id')
+  @Auth( ValidRoles.admin, ValidRoles.superUser )
+  actualizarEstado(@Param('id') id: string) {
+    return this.tipoSalasService.actualizarEstado(id);
   }
 }

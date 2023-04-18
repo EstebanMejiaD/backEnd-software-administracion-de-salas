@@ -5,7 +5,7 @@ import { UpdateTipoDocuentoDto } from './dto/update-tipo_docuento.dto';
 import { Auth } from '../usuarios/decorators/auth.decorator';
 import { ValidRoles } from 'src/usuarios/interfaces';
 
-@Controller('tipo-docuento')
+@Controller('tipo-documento')
 export class TipoDocuentoController {
   constructor(private readonly tipoDocuentoService: TipoDocuentoService) {}
 

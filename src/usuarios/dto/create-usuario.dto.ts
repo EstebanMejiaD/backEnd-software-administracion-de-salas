@@ -4,13 +4,13 @@ export class CreateUsuarioDto {
 
 
     @IsString({message: 'El nombre debe ser una cadena de texto'})
-    @MinLength(3, {message: 'El nombre debe tener al menos 3 caaracteres' })
+    @MinLength(3, {message: 'El nombre debe tener al menos 3 caracteres' })
     @IsNotEmpty({message: 'El nombre no puede ser vacío'})
     nombre: string
 
 
     @IsString({message: 'El apellido debe ser una cadena de texto'})
-    @MinLength(3, {message: 'El apellido debe tener al menos 3 caaracteres' })
+    @MinLength(3, {message: 'El apellido debe tener al menos 3 caracteres' })
     @IsNotEmpty({message: 'El apellido no puede ser vacío'})
     apellido: string
 

@@ -45,5 +45,4 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
   providers: [],
 })
 export class AppModule {
-  
 }
