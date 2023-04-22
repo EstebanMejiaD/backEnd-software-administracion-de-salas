@@ -80,7 +80,7 @@ export class UsuariosController {
   }
 
   @Get("Obtener")
-  @Auth(ValidRoles.estudiante,ValidRoles.docente,ValidRoles.admin,ValidRoles.superUser)
+  @Auth(ValidRoles.admin,ValidRoles.superUser)
   findAll(@Query()pagination:PaginationUsuarioDto) {
     return this.usuariosService.findAll(pagination);
   }

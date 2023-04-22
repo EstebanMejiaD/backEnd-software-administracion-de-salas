@@ -15,7 +15,7 @@ export const dataSourceConfig: DataSourceOptions = {
     database: 'sads_db',
     // entities: ["./src/**/*.entity.ts"],
     entities: ['dist/**/*.entity{.ts,.js}'],
-    synchronize: true,
+    synchronize: false,
     migrationsTableName: "migrations",
     migrations: ["./migrations/*.ts"],
     namingStrategy: new SnakeNamingStrategy(),

@@ -44,7 +44,7 @@ npm install
 ```
 docker pull postgres:14.3
 ```
-* NOTA: Ten en cienta las vairiables de entorno en el archivo ".env.template" Solamente debes renombrar ese archivo a : ".env"
+* NOTA: Ten en cuenta las vairiables de entorno en el archivo ".env.template" Solamente debes renombrar ese archivo a : ".env" No cambies las variables de entorno, aun estamos en proceso de arreglar ciertas configuraciones.
 
 Seguido a eso, ahora puedes levantar el contenedor de la base de datos de docker ejecitando en la linea de comandos claro teniendo en cuenta siempre estar en la ruta del proyecto el siguiente comando: 
 ```
@@ -82,6 +82,12 @@ Para revertir la ultima migracion:
 ```
 npm run migrations:revert
 ```
+
+
+Ahora si puedes empezar a usar la app y provar sus servicios: 
+
+Ve al archivo que esta en este mismo nivel de ruta llamado: README-MODULOS_SERVICIOS.md 
+Aqui esta toda la explicacion del uso de los servicios.
 
 
 

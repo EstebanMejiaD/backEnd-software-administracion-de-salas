@@ -13,7 +13,6 @@ export class TipoDocuentoController {
 
 
   @Post('Crear')
-  @Auth(ValidRoles.superUser)
   create(@Body() createTipoDocuentoDto: CreateTipoDocuentoDto) {
     return this.tipoDocuentoService.create(createTipoDocuentoDto);
   }

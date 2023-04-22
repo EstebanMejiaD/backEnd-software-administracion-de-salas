@@ -16,6 +16,7 @@ export class TipoDocuento {
 
     @OneToMany(()=> Usuario, (usuario)=> usuario.tipoDocumento)
     usuarios?: Usuario[]
+    
 
     @Column({
         default: true,
