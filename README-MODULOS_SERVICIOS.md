@@ -4,7 +4,7 @@
 
 Si viene del anterior readme. Debera seguir estos pasos para que funcionen correctamente los servicios.
 
-1. Primero debes antes de crear el usuario, debes crear por lo menos un tipo de usuario así:
+1. Primero antes de crear el usuario, debes crear por lo menos un tipo de usuario así:
 
 **Ruta: http://localhost:3001/api/v1/sads/tipo-documento/Crear**
 
