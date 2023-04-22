@@ -10,6 +10,5 @@ export class CreateTipoDocuentoDto {
     @IsOptional()
     estado?: boolean
 
-   
 
 }

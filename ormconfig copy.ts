@@ -15,7 +15,7 @@ export const dataSourceConfig: DataSourceOptions = {
     database: '', // aqui!
     // entities: ["./src/**/*.entity.ts"],
     entities: ['dist/**/*.entity{.ts,.js}'],
-    synchronize: false,
+    synchronize: true,
     migrationsTableName: "migrations",
     migrations: ["./migrations/*.ts"],
     namingStrategy: new SnakeNamingStrategy(),

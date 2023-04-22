@@ -18,6 +18,10 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      //Esta parte del codigo habilita la conversion implicita de tipos de datos
+      transformOptions: {
+      enableImplicitConversion: true
+      }
     })
     )
     
