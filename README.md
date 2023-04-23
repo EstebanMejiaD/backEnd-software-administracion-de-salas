@@ -51,7 +51,9 @@ Seguido a eso, ahora puedes levantar el contenedor de la base de datos de docker
 docker-compose up -d
 ```
 
-5. Ya teniendo los modulos instalados y la base de datos corriendo en docker puedes iniciar el servidor de ésta manera:
+5. Ya teniendo los modulos instalados y la base de datos corriendo en docker puedes iniciar el servidor de ésta manera: 
+
+*Necesitas correr el servidor por primera vez para poder generar y correr las migraciones, creando la carpeta de dist. 
 
 si usas yarn:
 ```
@@ -66,7 +68,8 @@ npm run start:dev
 
 
 
-* Comandos especiales para hacer migraciones:
+* Comandos especiales para hacer migraciones: 
+*Nota: si tu proyecto tiene la carpeta dist, estas preparado para hacer las migraciones
 
 Para generarla:
 ```
