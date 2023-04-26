@@ -26,7 +26,7 @@ export class TipoDocuentoController {
   @Get('/Obtener-uno/:id')
   @Auth(ValidRoles.superUser )
   findOne(@Param('id') id: string) {
-    return this.tipoDocuentoService.findOne(id);
+    return this.tipoDocuentoService.findOneById(id);
   }
 
   @Patch('/Actualizar/:id')

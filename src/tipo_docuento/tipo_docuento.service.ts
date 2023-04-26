@@ -83,7 +83,7 @@ export class TipoDocuentoService {
   // tipo de documento es encontrado y su campo estado está establecido en true, 
   // el método retorna un objeto tipo de documento que representa el registro encontrado.
   
-  async findOne(id: string) {
+  async findOneById(id: string) {
 
     try{
 
@@ -110,6 +110,27 @@ export class TipoDocuentoService {
     }
 
   }
+
+  // este metodo solo se debe usar con la ejecucion del seed o semilla para crear super usuarios
+  async findOneNombre(nombre: string) {
+
+    try{
+
+      const tipodocuento = await this.tipoDocumentoRepository.findOneBy({nombre})
+
+     
+
+      return tipodocuento.id;
+
+    }catch(error){
+
+      this.handleDBErrors(error);
+    
+    }
+
+  }
+
+
 
   // Ruta: http://localhost:3001/api/v1/sads/tipo-documento/Actualizar/id
 

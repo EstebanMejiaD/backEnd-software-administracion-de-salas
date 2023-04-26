@@ -10,6 +10,10 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
   providers: [TipoDocuentoService],
   imports: [TypeOrmModule.forFeature([
     TipoDocuento
-  ]), UsuariosModule]
+  ]), UsuariosModule],
+  exports: [
+    TipoDocuentoService,
+    TypeOrmModule,
+  ]
 })
 export class TipoDocuentoModule {}

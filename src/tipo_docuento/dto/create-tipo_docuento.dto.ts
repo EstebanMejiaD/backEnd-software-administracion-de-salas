@@ -7,8 +7,7 @@ export class CreateTipoDocuentoDto {
     @IsString()
     nombre: string
 
-    @IsOptional()
-    estado?: boolean
+   
 
 
 }
