@@ -57,7 +57,7 @@ docker-compose up -d
 
 si usas yarn:
 ```
-yarn start: dev
+yarn start:dev
 ```
 si usas npm:
 ```
@@ -69,7 +69,7 @@ npm run start:dev
 
 
 * Comandos especiales para hacer migraciones: 
-*Nota: si tu proyecto tiene la carpeta dist, estas preparado para hacer las migraciones
+* Nota: si tu proyecto tiene la carpeta dist, estas preparado para hacer las migraciones
 
 Para generarla:
 ```
