@@ -9,6 +9,7 @@ interface SeedUsuario {
   contraseña: string;
   documento: number;
   tipoDocumento: string;
+  role: string[];
 }
 
 interface SeedData {
@@ -43,6 +44,7 @@ export const initialData: SeedData = {
         contraseña: "Esteban123",
         documento: 1007134222,
         tipoDocumento: 'Cédula de ciudadanía',
+        role: ['super-user']
     }
   ]
 
