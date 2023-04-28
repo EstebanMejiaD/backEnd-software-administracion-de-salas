@@ -11,34 +11,34 @@ import { PaginationTipodocuentoDto } from './dto/pagination-tipo_docuento.dto';
 export class TipoDocuentoController {
   constructor(private readonly tipoDocuentoService: TipoDocuentoService) {}
 
-
   @Post('Crear')
+  @Auth(ValidRoles.superUser)
   create(@Body() createTipoDocuentoDto: CreateTipoDocuentoDto) {
     return this.tipoDocuentoService.create(createTipoDocuentoDto);
   }
 
   @Get('Obtener')
-  @Auth(ValidRoles.superUser )
   findAll(@Query() pagination: PaginationTipodocuentoDto) {
     return this.tipoDocuentoService.findAll(pagination);
   }
 
   @Get('/Obtener-uno/:id')
-  @Auth(ValidRoles.superUser )
   findOne(@Param('id') id: string) {
     return this.tipoDocuentoService.findOneById(id);
   }
 
   @Patch('/Actualizar/:id')
-  @Auth(ValidRoles.superUser )
-  update(@Param('id') id: string, @Body() updateTipoDocuentoDto: UpdateTipoDocuentoDto) {
+  @Auth(ValidRoles.superUser)
+  update(
+    @Param('id') id: string,
+    @Body() updateTipoDocuentoDto: UpdateTipoDocuentoDto,
+  ) {
     return this.tipoDocuentoService.update(id, updateTipoDocuentoDto);
   }
 
   @Delete('/Eliminar/:id')
-  @Auth(ValidRoles.superUser )
+  @Auth(ValidRoles.superUser)
   actualizarEstado(@Param('id') id: string) {
     return this.tipoDocuentoService.actualizarEstado(id);
   }
-
 }
