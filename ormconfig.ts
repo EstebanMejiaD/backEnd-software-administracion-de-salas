@@ -4,7 +4,7 @@ import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 
 
-    console.log("soy un puerto: ", process.env.DBPORT)
+    console.log("Si la consola al generar  o correr las migraciones te dice que no hay cambios en la base de datos debes correr por un momento el servidor para que la carpeta dist esté actualizada, si ya lo hiciste y todo salió bien, haz caso omiso a éste mensaje. ")
 
 export const dataSourceConfig: DataSourceOptions = {
     type: 'postgres',

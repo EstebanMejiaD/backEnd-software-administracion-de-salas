@@ -12,9 +12,18 @@ interface SeedUsuario {
   role: string[];
 }
 
+interface SeedTipoSala {
+  nombre: string;
+}
+interface SeedTipoReserva {
+  nombre: string;
+}
+
 interface SeedData {
   tipoDocumentos: SeedTipoDocumento[];
   superUsuarios: SeedUsuario[];
+  tipoSala: SeedTipoSala[]
+  tipoReserva: SeedTipoReserva[]
 }
 
 export const initialData: SeedData = {
@@ -46,6 +55,35 @@ export const initialData: SeedData = {
         tipoDocumento: 'Cédula de ciudadanía',
         role: ['super-user']
     }
+  ],
+
+  tipoSala: [
+    {
+      nombre: 'Sala de cómputo'
+    },
+    {
+      nombre: 'Salon de clases'
+    },
+    {
+      nombre: 'Teatro'
+    },
+    {
+      nombre: 'Sala de reuniones'
+    },
+    {
+      nombre: 'Sala de conferencias'
+    }
+  ],
+
+  tipoReserva: [
+    {
+      nombre: 'Un puesto'
+    },
+    {
+      nombre: 'Sala Completa'
+    },
   ]
+
+
 
 };

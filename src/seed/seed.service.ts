@@ -3,6 +3,9 @@ import { TipoDocuentoService } from 'src/tipo_docuento/tipo_docuento.service';
 import { initialData } from './data/seed-data';
 import { ConfigService } from '@nestjs/config';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
+import { Usuario } from 'src/entities';
+import { TipoSalasService } from 'src/tipo-salas/tipo-salas.service';
+import { TipoReservaService } from 'src/tipo-reserva/tipo-reserva.service';
 
 @Injectable()
 export class SeedService {
@@ -10,6 +13,8 @@ export class SeedService {
     private readonly configService: ConfigService,
     private readonly tipoDocumentoService: TipoDocuentoService,
     private readonly usuariosService: UsuariosService,
+    private readonly tipoSalaService: TipoSalasService,
+    private readonly tipoReservaService: TipoReservaService,
     ) {}
 
   async correrSeedTipoDocumento() {
@@ -70,5 +75,51 @@ export class SeedService {
 
     return true
   }
+
+
+  async correrSeedSalaReserva(user: Usuario) {
+
+       this.insertarTipoSala(user);
+
+      this.insertarTipoReserva(user);
+
+    return "Tipos de salas y reservas creados"
+  }
+
+
+  private async insertarTipoSala(user: Usuario) {
+    const tipoSalas = initialData.tipoSala;
+
+    const insertarPromesas = []
+
+    console.log(tipoSalas)
+
+    tipoSalas.forEach( tipoSala => {
+      insertarPromesas.push( this.tipoSalaService.create( tipoSala, user ) )
+    })
+    
+    await Promise.all( insertarPromesas )
+
+
+    return true;
+  }
+
+  private async insertarTipoReserva(user: Usuario) {
+    const tipoReservas = initialData.tipoReserva;
+
+    const insertarPromesas = []
+
+    
+
+    tipoReservas.forEach( tipoReserva => {
+      insertarPromesas.push( this.tipoReservaService.create( tipoReserva, user ) )
+    })
+    
+    await Promise.all( insertarPromesas )
+
+
+    return true;
+  }
+  
 
 }

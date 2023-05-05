@@ -16,6 +16,7 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
       TipoSala
     ]),
     UsuariosModule
-  ]
+  ],
+  exports: [TypeOrmModule, SalasService]
 })
 export class SalasModule {}

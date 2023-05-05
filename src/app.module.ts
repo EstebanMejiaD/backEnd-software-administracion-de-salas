@@ -7,6 +7,8 @@ import { TipoSalasModule } from './tipo-salas/tipo-salas.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { SeedModule } from './seed/seed.module';
+import { ReservasModule } from './reservas/reservas.module';
+import { TipoReservaModule } from './tipo-reserva/tipo-reserva.module';
 
 @Module({
   imports: [
@@ -41,7 +43,9 @@ import { SeedModule } from './seed/seed.module';
     TipoDocuentoModule,
     SalasModule,
     TipoSalasModule,
-    SeedModule
+    SeedModule,
+    ReservasModule,
+    TipoReservaModule
   ],
   controllers: [],
   providers: [],

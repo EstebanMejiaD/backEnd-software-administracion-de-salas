@@ -10,7 +10,8 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
   providers: [TipoSalasService],
   imports: [TypeOrmModule.forFeature([TipoSala]),
         UsuariosModule
-    ]
+    ],
+    exports: [TipoSalasService, TypeOrmModule]
 
 })
 export class TipoSalasModule {}

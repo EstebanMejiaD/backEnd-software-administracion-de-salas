@@ -11,6 +11,8 @@ import {
 } from 'typeorm';
 import { Sala } from './sala.entity';
 import { TipoSala } from './tipo-sala.entity';
+import { TipoReserva } from './tipo-reserva.entity';
+import { Reserva } from './reserva.entity';
 
 
 @Entity({ name: 'usuario' })
@@ -60,12 +62,29 @@ export class Usuario  {
   )
   sala: Sala
 
+  
+
   // esta es la relacion que tiene el usuario con el tipo de sala, uno a muchos, un usuario puede crear muchos tipos de salas
   @OneToMany(
     ()=> TipoSala, 
     (tipoSala) => tipoSala.usuario
   )
   tipoSala: TipoSala
+
+
+  // esta es la relacion que tiene el usuario con una reserva, uno a muchos, un usuario puede crear muchas reservas
+  @OneToMany(
+    ()=> Reserva, 
+    (reserva) => reserva.usuario
+  )
+  reserva: Reserva
+
+  // esta es la relacion que tiene el usuario con el tipo de reserva, uno a muchos, un usuario puede crear muchos tipos de reservas
+  @OneToMany(
+    ()=> TipoReserva, 
+    (tipoReserva) => tipoReserva.usuario
+  )
+  tipoReserva: TipoReserva
 
 
   // tipo de usuario o rol, es una relacion con una tabla de tipo de usuario o rol
