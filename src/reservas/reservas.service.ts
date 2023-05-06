@@ -8,7 +8,7 @@ import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { Reserva, Sala, TipoReserva, Usuario } from 'src/entities';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { TipoReservaService } from '../tipo-reserva/tipo-reserva.service';
 import { ValidTipoReserva } from './interfaces/valid-tipo-reserva';
 import { ValidEstadoReserva } from './interfaces/valid-estado-reserva';
@@ -32,7 +32,7 @@ export class ReservasService {
       const isSala = await this.salaRepository.findOne({where: {id: sala}})
       let {estadoSala} =isSala
 
-      if (estadoSala[0]===ValidEstadoSala.disponible || estadoSala[0]===ValidEstadoSala.parcial) {
+      if (estadoSala===ValidEstadoSala.disponible || estadoSala===ValidEstadoSala.parcial) {
         const isTipoReserva = await this.tipoReservaService.findOneNombre(
           ValidTipoReserva.puesto,
         );
@@ -65,7 +65,7 @@ export class ReservasService {
       const isSala = await this.salaRepository.findOne({where: {id: sala}})
       let {estadoSala} =isSala
 
-     if (estadoSala[0]===ValidEstadoSala.disponible) {
+     if (estadoSala===ValidEstadoSala.disponible) {
       const isTipoReserva = await this.tipoReservaService.findOneNombre(
         ValidTipoReserva.salaCompleta,
       );
@@ -96,7 +96,7 @@ export class ReservasService {
       const isReserva = await this.reservaRepository.findOneBy({ id });
 
       if (isReserva) {
-        if (isReserva.estadoReserva[0] === ValidEstadoReserva.pendiente) {
+        if (isReserva.estadoReserva === ValidEstadoReserva.pendiente) {
           if (respuestaGestion.ValidestadoReserva === 1) {
             const tipoReserva: any = isReserva.tipoReserva;
             const nombre = tipoReserva.nombre;
@@ -106,13 +106,13 @@ export class ReservasService {
               where: { id: sala.id },
             });
             let { estadoSala } = isSala;
-            if (estadoSala[0] === ValidEstadoSala.total) {
+            if (estadoSala === ValidEstadoSala.total) {
               return new NotFoundException('La sala ya no está disponible para reservar');
 
-            } else if (estadoSala[0] === ValidEstadoSala.parcial) {
+            } else if (estadoSala === ValidEstadoSala.parcial) {
               if (nombre == ValidTipoReserva.puesto) {
                 let estadoReserva = isReserva.estadoReserva;
-                estadoReserva = [ValidEstadoReserva.aceptado];
+                estadoReserva = ValidEstadoReserva.aceptado;
                 const reserva = await this.reservaRepository.preload({
                   id,
                   estadoReserva,
@@ -128,7 +128,7 @@ export class ReservasService {
                 puestosActual = puestosActual - 1;
 
                 if (puestosActual < puestosInicial && puestosActual > 0) {
-                  estadoSala = [ValidEstadoSala.parcial];
+                  estadoSala = ValidEstadoSala.parcial;
                   const sala = await this.salaRepository.preload({
                     id: isSala.id,
                     puestosActual,
@@ -142,10 +142,10 @@ export class ReservasService {
               }else {
                 return new NotFoundException('Solo se puede hacer la reserva de puestos')
               }
-            } else if (estadoSala[0] === ValidEstadoSala.disponible) {
+            } else if (estadoSala === ValidEstadoSala.disponible) {
               if (nombre == ValidTipoReserva.salaCompleta) {
                 let estadoReserva = isReserva.estadoReserva;
-                estadoReserva = [ValidEstadoReserva.aceptado];
+                estadoReserva = ValidEstadoReserva.aceptado;
                 const reserva = await this.reservaRepository.preload({
                   id,
                   estadoReserva,
@@ -161,7 +161,7 @@ export class ReservasService {
                 puestosActual = puestosActual - puestosInicial;
 
                 if (puestosActual === 0) {
-                  estadoSala = [ValidEstadoSala.total];
+                  estadoSala = ValidEstadoSala.total;
                   const sala = await this.salaRepository.preload({
                     id: isSala.id,
                     puestosActual,
@@ -176,7 +176,7 @@ export class ReservasService {
 
               if (nombre == ValidTipoReserva.puesto) {
                 let estadoReserva = isReserva.estadoReserva;
-                estadoReserva = [ValidEstadoReserva.aceptado];
+                estadoReserva = ValidEstadoReserva.aceptado;
                 const reserva = await this.reservaRepository.preload({
                   id,
                   estadoReserva,
@@ -192,7 +192,7 @@ export class ReservasService {
                 puestosActual = puestosActual - 1;
 
                 if (puestosActual < puestosInicial && puestosActual > 0) {
-                  estadoSala = [ValidEstadoSala.parcial];
+                  estadoSala = ValidEstadoSala.parcial;
                   const sala = await this.salaRepository.preload({
                     id: isSala.id,
                     puestosActual,
@@ -208,7 +208,7 @@ export class ReservasService {
           } else if (respuestaGestion.ValidestadoReserva === 0) {
 
             let estadoReserva = isReserva.estadoReserva;
-            estadoReserva = [ValidEstadoReserva.rechazado];
+            estadoReserva = ValidEstadoReserva.rechazado;
            const estadoActualizado= await this.reservaRepository.preload({
               id,
               estadoReserva,
@@ -229,11 +229,14 @@ export class ReservasService {
     }
   }
   // TODO: obtener unicamente las reservas que estan en estado pendiente
-  async obtenerTodasReservas() {
+  async obtenerTodasReservasPendiente() {
     
+  
+
     try {
+    
       const reservas = await this.reservaRepository.find({where: {
-        estadoReserva: ValidEstadoReserva.pendiente
+        estadoReserva: ValidEstadoReserva.pendiente,
       }})
 
       if (reservas) {
@@ -242,20 +245,62 @@ export class ReservasService {
       }else {
         return new NotFoundException("No hay reservas pendientes en estos momentos")
       }
-
-
-      
+ 
     } catch (error) {
       this.handleDBErrors(error)
     }
 
   }
 
+  
+
   // TODO: crear una ruta o servicio para  obtener unicamente las reservas que estan en estado rechazado
+  async obtenerTodasReservasRechazado() {
+    
+  
+
+    try {
+    
+      const reservas = await this.reservaRepository.find({where: {
+        estadoReserva: ValidEstadoReserva.rechazado,
+      }})
+
+      if (reservas) {
+
+        return reservas
+      }else {
+        return new NotFoundException("No hay reservas pendientes en estos momentos")
+      }
+ 
+    } catch (error) {
+      this.handleDBErrors(error)
+    }
+
+  }
 
   // TODO: crear una ruta o servicio para  obtener unicamente las reservas que estan en estado aceptado
 
+  async obtenerTodasReservasAceptado() {
 
+    try {
+    
+      const reservas = await this.reservaRepository.find({where: {
+        estadoReserva: ValidEstadoReserva.aceptado,
+      }})
+
+      if (reservas) {
+
+        return reservas
+      }else {
+        return new NotFoundException("No hay reservas pendientes en estos momentos")
+      }
+ 
+    } catch (error) {
+      this.handleDBErrors(error)
+    }
+
+  }
+  
   findOne(id: number) {
     return `This action returns a #${id} reserva`;
   }

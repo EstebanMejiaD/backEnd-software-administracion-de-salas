@@ -11,6 +11,8 @@ import { LoginUsuarioDto,  CreateUsuarioDto, PaginationUsuarioDto} from './dto';
 
 import * as bcrypt from 'bcrypt'
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { CreateUsuarioSuperiorDto } from './dto/create-usuarioSuperior.dto';
+import { ValidRoles } from './interfaces';
 
 @Injectable()
 export class UsuariosService {
@@ -64,6 +66,40 @@ export class UsuariosService {
           ...newUsuario,
           token: this.getJwtToken({ id: newUsuario.id})
         }
+      }
+    } catch (error) {
+      this.handleDBErrors(error)
+    }
+  }
+
+  async crearUsuarioSuperior(createUsuarioSuperiorDto: CreateUsuarioSuperiorDto) {
+    
+    try {
+      const id = createUsuarioSuperiorDto.tipoDocumento
+      
+      const tipoDocumento = await this.tipoDocumentoRepository.findOne( { where: {id} })
+
+      if (tipoDocumento) {
+        const { contraseña, role,...userData } = createUsuarioSuperiorDto
+          
+          if (role[0] === ValidRoles.admin ||role[0] === ValidRoles.docente || role[0] === ValidRoles.estudiante || role[0] === ValidRoles.superUser) {
+            const newUsuario = this.usuarioRepository.create({
+              ...userData,
+              role,
+              contraseña: bcrypt.hashSync( contraseña, 10)
+            })
+            newUsuario.tipoDocumento = tipoDocumento
+    
+            await this.usuarioRepository.save(newUsuario)
+    
+            delete newUsuario.contraseña
+            return {
+              ...newUsuario,
+              token: this.getJwtToken({ id: newUsuario.id})
+            }
+          } else {
+            return new BadRequestException("El role que está indicando no es válido por favor indique uno correcto")
+          } 
       }
     } catch (error) {
       this.handleDBErrors(error)

@@ -32,10 +32,9 @@ export class Reserva {
   EndTime: Date;
 
   @Column('text', {
-    array: true,
-    default: ['pendiente'],
+    default: 'pendiente'
   })
-  estadoReserva: string[];
+  estadoReserva: string;
 
   // esta es la relacion de muchos para los tipos de reservas
   @ManyToOne(() => TipoReserva, (tipoReserva) => tipoReserva.reserva, {

@@ -27,7 +27,7 @@ export class CreateSalaDto {
    * Esto es para validad el tipo de sala cuando se crea y para luego actualizar
    */
   @IsOptional()
-  estadoSala?: string[];
+  estadoSala?: string;
 
   @IsNumber({}, { message: 'El numero de puestos inicial: "puestosInicial" debe ser un numero' })
   @IsNotEmpty({ message: 'El numero de puestos inicial: "puestosInicial" no puede estar vacío' })

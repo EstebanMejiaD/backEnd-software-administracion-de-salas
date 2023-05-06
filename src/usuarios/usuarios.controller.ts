@@ -10,6 +10,7 @@ import { UserRoleGuard } from './guards/user-role.guard';
 import { RoleProtected } from './decorators/role-protected.decorator';
 import { ValidRoles } from './interfaces';
 import { Auth } from './decorators/auth.decorator';
+import { CreateUsuarioSuperiorDto } from './dto/create-usuarioSuperior.dto';
 
 
 @Controller('usuarios')
@@ -24,60 +25,18 @@ export class UsuariosController {
     return this.usuariosService.crearUsuarioEstudiante(createUsuarioDto);
   }
 
+  @Post('register-superior')
+  @Auth( ValidRoles.superUser )
+  crearUsuarioSuperior(@Body() createUsuarioSuperiorDto: CreateUsuarioSuperiorDto, ) {
+    return this.usuariosService.crearUsuarioSuperior(createUsuarioSuperiorDto);
+  }
+
 
   @Post('login')
   loginUser(@Body() loginUsuarioDto: LoginUsuarioDto) {
     return this.usuariosService.login(loginUsuarioDto);
   }
 
-  // ruta privada de ejemplo para usar el concepto de autorizacion por token
-  @Get('private')
-  @UseGuards( AuthGuard() )
-  testingPrivateRoute(
-    @Req() request: Express.Request,
-    @GetUser() user: Usuario,
-    @GetUser('email') userEmail: string,
-
-    @RawHeaders() rawHeaders: string[]) 
-  {
-
-    return {
-      ok: true,
-      message: 'Hola mundo private',
-      user,
-      userEmail,
-      rawHeaders
-    }
-  }
-
-
-   // ruta privada de ejemplo para usar el concepto de autorizacion por token y roles
-   //  @SetMetadata('roles', ['admin', 'super-user'])
-
-
-  @Get('private2')
-  @RoleProtected( ValidRoles.estudiante,  )
-  @UseGuards( AuthGuard(), UserRoleGuard )
-  privateRoute2(@GetUser() user: Usuario,) {
-    return {
-      ok: true,
-      user,
-    
-    }
-  }
-
-    // ruta privada de ejemplo para usar el concepto de autorizacion por token y roles
-   //  @SetMetadata('roles', ['admin', 'super-user'])
-
-
-  @Get('private3')
-  @Auth(ValidRoles.superUser)
-  privateRoute3(@GetUser() user: Usuario,) {
-    return {
-      ok: true,
-      user,
-    }
-  }
 
   @Get("Obtener")
   @Auth(ValidRoles.admin,ValidRoles.superUser)

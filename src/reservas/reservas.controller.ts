@@ -26,10 +26,22 @@ export class ReservasController {
 
 
 
-  @Get('Obtener')
+  @Get('obtener-pendiente')
   @Auth( ValidRoles.superUser, ValidRoles.admin )
-  obtenerTodasReservas() {
-    return this.reservasService.obtenerTodasReservas();
+  obtenerTodasReservasPendiente() {
+    return this.reservasService.obtenerTodasReservasPendiente();
+  }
+
+  @Get('obtener-rechazado')
+  @Auth( ValidRoles.superUser, ValidRoles.admin )
+  obtenerTodasReservasRechazado() {
+    return this.reservasService.obtenerTodasReservasRechazado();
+  }
+
+  @Get('obtener-aceptado')
+  @Auth( ValidRoles.superUser, ValidRoles.admin )
+  obtenerTodasReservasAceptado() {
+    return this.reservasService.obtenerTodasReservasAceptado();
   }
 
   @Get(':id')

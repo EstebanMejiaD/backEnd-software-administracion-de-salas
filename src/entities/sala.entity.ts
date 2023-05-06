@@ -36,10 +36,9 @@ export class Sala {
    * El estado de la sala: estado_sala va a tener 3 valores, el disponible, donde se van a poder reservar por 1 puesto y toda la sala, el parcialmente ocupada, donde se podrá reservar unicamente por un puesto y el totalmente reservada que significa que no se podrá reservar más en la sala porque ya esta totalmente ocupada.
    */
   @Column('text', {
-    array: true,
-    default: ['disponible']
+    default: 'disponible'
   })
-  estadoSala: string[]
+  estadoSala: string
 
   /**
    * El numero de puestos ó puestos: será nuestro control para saber si la sala está disponible, parcialmente disponible o totalmente disponible, el administrador tendrá que indicar la cantidad de puestos tiene la sala cuando la cree, para asi cuando se hagan reservas, poder determinar si una sala esta en un estado determinado, y cuandos puestos le quedan. 

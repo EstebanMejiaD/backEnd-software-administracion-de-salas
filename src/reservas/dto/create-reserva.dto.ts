@@ -20,9 +20,8 @@ export class CreateReservaDto {
   EndTime: Date;
 
 
-  @IsArray({ message: 'El estado de reserva debe ser una array de string' })
   @IsOptional()
-  estadoReserva?: string[];
+  estadoReserva?: string
 
   // @IsString()
   // @IsUUID()
