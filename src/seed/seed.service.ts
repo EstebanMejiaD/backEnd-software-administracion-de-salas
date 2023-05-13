@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { TipoDocuentoService } from 'src/tipo_docuento/tipo_docuento.service';
 import { initialData } from './data/seed-data';
 import { ConfigService } from '@nestjs/config';
@@ -47,11 +47,17 @@ export class SeedService {
 
       this.insertarSuperUsuario();
 
-    return 'Super usuario base ejecutado correctamente'
+    return {
+      status: 201,
+      msg: 'Super usuario base creado correctamente'
+    }
     }
 
 
-    return 'Constraseña incorrecta, contacte con el desarrollador back-end para solucionarlo'
+    return new BadRequestException({
+      status: 400,
+      msg: 'Constraseña incorrecta, contacte con el desarrollador back-end para solucionarlo'
+    })
 
   }
 
@@ -83,7 +89,10 @@ export class SeedService {
 
       this.insertarTipoReserva(user);
 
-    return "Tipos de salas y reservas creados"
+    return {
+      status: 201,
+      msg: "Tipos de salas y reservas creados"
+    }
   }
 
 

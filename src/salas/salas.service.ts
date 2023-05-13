@@ -77,13 +77,20 @@ export class SalasService {
             nuevaSala.tipoSala = isTipoSala;
             return nuevaSala;
           } else {
-            return new BadRequestException('La sala ya existe con ése nombre');
+            return new BadRequestException({
+              status: 400,
+              msg: 'La sala ya existe con ése nombre',
+            });
           }
         }
 
         await this.salasRepository.save(nuevaSala);
         nuevaSala.tipoSala = isTipoSala;
-        return nuevaSala;
+        return {
+          status: 201,
+          msg: 'Sala creada correctamente',
+          nuevaSala,
+        };
       }
     } catch (error) {
       this.handleDBErrors(error);
@@ -105,11 +112,24 @@ export class SalasService {
 
   async findAll({ limit, offset }: PaginationSalaDto) {
     try {
-      return await this.salasRepository.find({
+      const salas = await this.salasRepository.find({
         where: { estado: true },
         skip: offset,
         take: limit,
       });
+
+      if (!salas) {
+        return new NotFoundException({
+          status: 404,
+          msg: 'No hay salas creadas en estos momentos',
+        });
+      }
+
+      return {
+        status: 200,
+        msg: 'Salas obtenidas',
+        salas,
+      };
     } catch (error) {
       this.handleDBErrors(error);
     }
@@ -132,16 +152,24 @@ export class SalasService {
       const sala: Sala = await this.salasRepository.findOneBy({ id });
 
       if (!sala) {
-        return new NotFoundException('La sala que estas buscando, no existe');
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que estas buscando, no existe',
+        });
       }
 
       if (sala.estado === false) {
-        return new NotFoundException(
-          'La sala que estas buscando, no está disponible',
-        );
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que estas buscando, no existe',
+        });
       }
 
-      return sala;
+      return {
+        status: 200,
+        msg: 'Sala obtenida',
+        sala,
+      };
     } catch (error) {
       this.handleDBErrors(error);
     }
@@ -167,18 +195,25 @@ export class SalasService {
       });
 
       if (!sala) {
-        return new NotFoundException('La sala que estas buscando, no existe');
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que quieres actualizar, no existe',
+        });
       }
 
       if (sala.estado === false) {
-        return new NotFoundException(
-          'La sala que estas buscando, no está disponible',
-        );
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que quieres actualizar, no existe',
+        });
       }
 
       await this.salasRepository.save(sala);
 
-      return 'Sala actualizada';
+      return {
+        status: 200,
+        msg: 'Sala actualizada',
+      };
     } catch (error) {
       this.handleDBErrors(error);
     }
@@ -202,20 +237,27 @@ export class SalasService {
       const sala: Sala = await this.salasRepository.findOneBy({ id });
 
       if (!sala) {
-        return new NotFoundException('La sala que estas buscando, no existe');
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que quieres eliminar, no existe',
+        });
       }
 
       if (sala.estado === false) {
-        return new NotFoundException(
-          'La sala que estas buscando, no está disponible',
-        );
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que quieres eliminar, no existe',
+        });
       }
 
       sala.estado = false;
 
       await this.salasRepository.save(sala);
 
-      return 'Sala eliminada';
+      return {
+        status: 200,
+        msg: 'Sala eliminada',
+      };
     } catch (error) {
       this.handleDBErrors(error);
     }
@@ -223,11 +265,17 @@ export class SalasService {
 
   private handleDBErrors(error: any): never {
     if (error.code === '23505') {
-      throw new BadRequestException(error.detail);
+      throw new BadRequestException({ status: 400, error: error.detail });
+    }
+    if (error.code === '22P02') {
+      throw new BadRequestException({ status: 400, error: 'El id del parametro no es un uuid'});
     }
 
     console.log(error);
 
-    throw new InternalServerErrorException('Please check server logs');
+    throw new InternalServerErrorException({
+      status: 500,
+      msg: 'Please check server logs',
+    });
   }
 }

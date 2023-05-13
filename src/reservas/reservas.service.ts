@@ -27,31 +27,41 @@ export class ReservasService {
 
   async crearReservaPuesto(createReservaDto: CreateReservaDto, user: Usuario) {
     try {
-      const { usuario,sala, ...resData } = createReservaDto;
+      const { usuario, sala, ...resData } = createReservaDto;
 
-      const isSala = await this.salaRepository.findOne({where: {id: sala}})
-      let {estadoSala} =isSala
+      const isSala = await this.salaRepository.findOne({ where: { id: sala } });
+      let { estadoSala } = isSala;
 
-      if (estadoSala===ValidEstadoSala.disponible || estadoSala===ValidEstadoSala.parcial) {
+      if (
+        estadoSala === ValidEstadoSala.disponible ||
+        estadoSala === ValidEstadoSala.parcial
+      ) {
         const isTipoReserva = await this.tipoReservaService.findOneNombre(
           ValidTipoReserva.puesto,
         );
-  
+
         if (isTipoReserva) {
           const nuevaReserva = this.reservaRepository.create({
             ...resData,
             sala,
             usuario: user,
           });
-  
+
           nuevaReserva.tipoReserva = isTipoReserva;
-  
+
           await this.reservaRepository.save(nuevaReserva);
-  
-          return nuevaReserva;
+
+          return {
+            status: 201,
+            msg: 'Reserva creada',
+            nuevaReserva,
+          };
         }
-      }else {
-        return new BadRequestException('No se puede hacer la reserva de un puesto a esta sala porque esta parcial o completamente reservada')
+      } else {
+        return new BadRequestException({
+          status: 400,
+          msg: 'No se puede hacer la reserva de un puesto a esta sala porque esta completamente reservada',
+        });
       }
     } catch (error) {
       this.handleDBErrors(error);
@@ -60,32 +70,39 @@ export class ReservasService {
 
   async crearReservaSala(createReservaDto: CreateReservaDto, user: Usuario) {
     try {
-      const { usuario,sala, ...resData } = createReservaDto;
+      const { usuario, sala, ...resData } = createReservaDto;
 
-      const isSala = await this.salaRepository.findOne({where: {id: sala}})
-      let {estadoSala} =isSala
+      const isSala = await this.salaRepository.findOne({ where: { id: sala } });
+      let { estadoSala } = isSala;
 
-     if (estadoSala===ValidEstadoSala.disponible) {
-      const isTipoReserva = await this.tipoReservaService.findOneNombre(
-        ValidTipoReserva.salaCompleta,
-      );
+      if (estadoSala === ValidEstadoSala.disponible) {
+        const isTipoReserva = await this.tipoReservaService.findOneNombre(
+          ValidTipoReserva.salaCompleta,
+        );
 
-      if (isTipoReserva) {
-        const nuevaReserva = this.reservaRepository.create({
-          ...resData,
-          sala,
-          usuario: user,
+        if (isTipoReserva) {
+          const nuevaReserva = this.reservaRepository.create({
+            ...resData,
+            sala,
+            usuario: user,
+          });
+
+          nuevaReserva.tipoReserva = isTipoReserva;
+
+          await this.reservaRepository.save(nuevaReserva);
+
+          return {
+            status: 201,
+            msg: 'Reserva creada',
+            nuevaReserva,
+          };
+        }
+      } else {
+        return new BadRequestException({
+          status: 400,
+          msg: 'No se puede hacer la reserva de un puesto a esta sala porque esta parcial o completamente reservada',
         });
-
-        nuevaReserva.tipoReserva = isTipoReserva;
-
-        await this.reservaRepository.save(nuevaReserva);
-
-        return nuevaReserva;
       }
-     }else {
-      return new BadRequestException('No se puede hacer la reserva completa a esta sala porque esta parcial o completamente reservada')
-     }
     } catch (error) {
       this.handleDBErrors(error);
     }
@@ -107,8 +124,10 @@ export class ReservasService {
             });
             let { estadoSala } = isSala;
             if (estadoSala === ValidEstadoSala.total) {
-              return new NotFoundException('La sala ya no está disponible para reservar');
-
+              return new NotFoundException({
+                status: 404,
+                msg: 'La sala ya no está disponible para reservar',
+              });
             } else if (estadoSala === ValidEstadoSala.parcial) {
               if (nombre == ValidTipoReserva.puesto) {
                 let estadoReserva = isReserva.estadoReserva;
@@ -137,10 +156,16 @@ export class ReservasService {
                   });
                   await this.reservaRepository.save(reserva);
                   await this.salaRepository.save(sala);
-                  return 'Reserva de un puesto aceptada';
+                  return {
+                    status: 201,
+                    msg: 'Reserva de un puesto aceptada',
+                  };
                 }
-              }else {
-                return new NotFoundException('Solo se puede hacer la reserva de puestos')
+              } else {
+                return new BadRequestException({
+                  status: 400,
+                  msg: 'Solo se puede hacer la reserva de puestos',
+                });
               }
             } else if (estadoSala === ValidEstadoSala.disponible) {
               if (nombre == ValidTipoReserva.salaCompleta) {
@@ -170,7 +195,10 @@ export class ReservasService {
                   });
                   await this.reservaRepository.save(reserva);
                   await this.salaRepository.save(sala);
-                  return 'Reserva de sala completa aceptada';
+                  return {
+                    status: 201,
+                    msg: 'Reserva de sala completa aceptada',
+                  };
                 }
               }
 
@@ -201,106 +229,117 @@ export class ReservasService {
                   });
                   await this.reservaRepository.save(reserva);
                   await this.salaRepository.save(sala);
-                  return 'Reserva de un puesto aceptada';
+                  return {
+                    status: 201,
+                    msg: 'Reserva de un puesto aceptada',
+                  };
                 }
               }
             }
           } else if (respuestaGestion.ValidestadoReserva === 0) {
-
             let estadoReserva = isReserva.estadoReserva;
             estadoReserva = ValidEstadoReserva.rechazado;
-           const estadoActualizado= await this.reservaRepository.preload({
+            const estadoActualizado = await this.reservaRepository.preload({
               id,
               estadoReserva,
             });
 
-              await this.reservaRepository.save(estadoActualizado)
+            await this.reservaRepository.save(estadoActualizado);
 
-            return 'La reserva se rechazó';
-
+            return {
+              status: 200,
+              msg: 'La reserva se rechazó',
+            };
           }
         }
       }
-      return new NotFoundException(
-        'La reserva ya no está en estado: pendiente',
-      );
+      return new NotFoundException({
+        status: 404,
+        msg: 'La reserva ya no está en estado: pendiente',
+      });
     } catch (error) {
       this.handleDBErrors(error);
     }
   }
   // TODO: obtener unicamente las reservas que estan en estado pendiente
   async obtenerTodasReservasPendiente() {
-    
-  
-
     try {
-    
-      const reservas = await this.reservaRepository.find({where: {
-        estadoReserva: ValidEstadoReserva.pendiente,
-      }})
+      const reservas = await this.reservaRepository.find({
+        where: {
+          estadoReserva: ValidEstadoReserva.pendiente,
+        },
+      });
 
       if (reservas) {
-
-        return reservas
-      }else {
-        return new NotFoundException("No hay reservas pendientes en estos momentos")
+        return {
+          status: 200,
+          msg: 'Reservas pendientes obtenidas',
+          reservas,
+        };
+      } else {
+        return new NotFoundException({
+          status: 404,
+          msg: 'No hay reservas pendientes en estos momentos',
+        });
       }
- 
     } catch (error) {
-      this.handleDBErrors(error)
+      this.handleDBErrors(error);
     }
-
   }
-
-  
 
   // TODO: crear una ruta o servicio para  obtener unicamente las reservas que estan en estado rechazado
   async obtenerTodasReservasRechazado() {
-    
-  
-
     try {
-    
-      const reservas = await this.reservaRepository.find({where: {
-        estadoReserva: ValidEstadoReserva.rechazado,
-      }})
+      const reservas = await this.reservaRepository.find({
+        where: {
+          estadoReserva: ValidEstadoReserva.rechazado,
+        },
+      });
 
       if (reservas) {
-
-        return reservas
-      }else {
-        return new NotFoundException("No hay reservas pendientes en estos momentos")
+        return {
+          status: 200,
+          msg: 'Reservas rechazadas obtenidas',
+          reservas,
+        };
+      } else {
+        return new NotFoundException({
+          status: 404,
+          msg: 'No hay reservas rechazadas en estos momentos',
+        });
       }
- 
     } catch (error) {
-      this.handleDBErrors(error)
+      this.handleDBErrors(error);
     }
-
   }
 
   // TODO: crear una ruta o servicio para  obtener unicamente las reservas que estan en estado aceptado
 
   async obtenerTodasReservasAceptado() {
-
     try {
-    
-      const reservas = await this.reservaRepository.find({where: {
-        estadoReserva: ValidEstadoReserva.aceptado,
-      }})
+      const reservas = await this.reservaRepository.find({
+        where: {
+          estadoReserva: ValidEstadoReserva.aceptado,
+        },
+      });
 
       if (reservas) {
-
-        return reservas
-      }else {
-        return new NotFoundException("No hay reservas pendientes en estos momentos")
+        return {
+          status: 200,
+          msg: 'Reservas aceptadas obtenidas',
+          reservas,
+        };
+      } else {
+        return new NotFoundException({
+          status: 404,
+          msg: 'No hay reservas aceptadas en estos momentos',
+        });
       }
- 
     } catch (error) {
-      this.handleDBErrors(error)
+      this.handleDBErrors(error);
     }
-
   }
-  
+
   findOne(id: number) {
     return `This action returns a #${id} reserva`;
   }
@@ -315,11 +354,17 @@ export class ReservasService {
 
   private handleDBErrors(error: any): never {
     if (error.code === '23505') {
-      throw new BadRequestException(error.detail);
+      throw new BadRequestException({ status: 400, error: error.detail });
     }
 
+    if (error.code === '22P02') {
+      throw new BadRequestException({ status: 400, error: 'El id del parametro no es un uuid'});
+    }
     console.log(error);
 
-    throw new InternalServerErrorException('Please check server logs');
+    throw new InternalServerErrorException({
+      status: 500,
+      msg: 'Please check server logs',
+    });
   }
 }
