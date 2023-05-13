@@ -93,20 +93,20 @@ Ahora si puedes empezar a usar la app y provar sus servicios:
  
 * Para las excepciones o errores: TODAS TIENE EL MISMO FORMATO
 {
-status: //400, 500
+status: //400, 500,
 msg: // <'Mensaje del error correspondiente'>
 }
 
 * Para las  response esperadas: TODAS TIENE EL MISMO FORMATO CON ALGUNAS EXCEPCIONES
 {
-status: //200, 201
+status: //200, 201,
 msg: // <'Mensaje del error correspondiente'>,
 <Aquí va el objeto o array del recurso que se creo o se pidio>
 }
 
 * Las excepciones de respuestas esperadas son en las actualizaciones y en las eliminaciones que lucen así:
 {
-status: //200
+status: //200,
 msg: // <'Mensaje que se actualizó o se eliminó correspondiente'>
 }
 
