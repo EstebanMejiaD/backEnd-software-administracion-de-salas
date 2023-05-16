@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ReservasService } from './reservas.service';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
@@ -6,6 +6,7 @@ import { Auth, GetUser } from 'src/usuarios/decorators';
 import { ValidRoles } from 'src/usuarios/interfaces';
 import { Usuario } from 'src/entities';
 import { EstadoReservaDto } from './dto/estado-Reserva.dto';
+import { PaginationSalaDto } from 'src/salas/dto/pagination-sala.dto';
 
 
 @Controller('reservas')
@@ -28,30 +29,32 @@ export class ReservasController {
 
   @Get('obtener-pendiente')
   @Auth( ValidRoles.superUser, ValidRoles.admin )
-  obtenerTodasReservasPendiente() {
-    return this.reservasService.obtenerTodasReservasPendiente();
+  obtenerTodasReservasPendiente(@Query() pagination: PaginationSalaDto) {
+    return this.reservasService.obtenerTodasReservasPendiente(pagination);
   }
 
   @Get('obtener-rechazado')
   @Auth( ValidRoles.superUser, ValidRoles.admin )
-  obtenerTodasReservasRechazado() {
-    return this.reservasService.obtenerTodasReservasRechazado();
+  obtenerTodasReservasRechazado(@Query() pagination: PaginationSalaDto) {
+    return this.reservasService.obtenerTodasReservasRechazado(pagination);
   }
 
   @Get('obtener-aceptado')
   @Auth( ValidRoles.superUser, ValidRoles.admin )
-  obtenerTodasReservasAceptado() {
-    return this.reservasService.obtenerTodasReservasAceptado();
+  obtenerTodasReservasAceptado(@Query() pagination: PaginationSalaDto) {
+    return this.reservasService.obtenerTodasReservasAceptado(pagination);
   }
 
-  @Get(':id')
+  @Get('/Obtener-una/:id')
+  @Auth( ValidRoles.superUser, ValidRoles.admin )
   findOne(@Param('id') id: string) {
-    return this.reservasService.findOne(+id);
+    return this.reservasService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('/Actualizar/:id')
+  @Auth( ValidRoles.superUser, ValidRoles.admin )
   update(@Param('id') id: string, @Body() updateReservaDto: UpdateReservaDto) {
-    return this.reservasService.update(+id, updateReservaDto);
+    return this.reservasService.update(id, updateReservaDto);
   }
 
   @Patch('gestion/:id')
@@ -60,8 +63,9 @@ export class ReservasController {
     return this.reservasService.GestionReservas(id, respuestaGestion);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reservasService.remove(+id);
+  @Delete('/Eliminar/:id')
+  @Auth( ValidRoles.superUser, ValidRoles.admin )
+  actualizarEstado(@Param('id') id: string) {
+    return this.reservasService.actualizarEstado(id);
   }
 }

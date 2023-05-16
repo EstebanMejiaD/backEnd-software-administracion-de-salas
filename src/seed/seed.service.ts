@@ -85,7 +85,7 @@ export class SeedService {
 
   async correrSeedSalaReserva(user: Usuario) {
 
-       this.insertarTipoSala(user);
+      this.insertarTipoSala(user);
 
       this.insertarTipoReserva(user);
 

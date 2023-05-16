@@ -4,11 +4,13 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateTipoReservaDto } from './dto/create-tipo-reserva.dto';
 import { UpdateTipoReservaDto } from './dto/update-tipo-reserva.dto';
 import { TipoReserva, Usuario } from 'src/entities';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PaginationTiporeservaDto } from './dto/pagination-tipo-reserva.dto';
 
 @Injectable()
 export class TipoReservaService {
@@ -50,8 +52,37 @@ export class TipoReservaService {
     }
   }
 
-  findAll() {
-    return `This action returns all tipoReserva`;
+  async findAll({limit, offset}: PaginationTiporeservaDto){
+
+    try {
+
+      const tipoReserva = await this.tipoReservaRepository.find({
+        where:{estado: true},
+        skip: offset,
+        take: limit,
+      })
+
+      if(!tipoReserva){
+
+        return new NotFoundException({
+          status: 404,
+          msg: 'No hay tipos de reservas creadas en estos momentos',
+        });
+
+      }
+
+      return {
+        status: 200,
+        msg: 'Tipo de reservas obtenidas',
+        tipoReserva,
+      };
+      
+    } catch (error) {
+      
+      this.handleDBErrors(error);
+
+    }
+    
   }
 
   async findOne(id: string) {
@@ -82,12 +113,79 @@ export class TipoReservaService {
     }
   }
 
-  update(id: number, updateTipoReservaDto: UpdateTipoReservaDto) {
-    return `This action updates a #${id} tipoReserva`;
+  async update(id: string, updateTipoReservaDto: UpdateTipoReservaDto) {
+    try {
+
+      const TipoReserva = await this.tipoReservaRepository.preload({
+        id,
+        ...updateTipoReservaDto
+      })
+      
+      if(!TipoReserva){
+
+        return new NotFoundException({
+        status: 404,
+        msg: 'El tipo de reserva que quieres actualizar, no existe',
+        });       
+
+      }
+
+      if(TipoReserva.estado === false){
+
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que quieres actualizar, no existe',
+        });
+
+      }
+
+      await this.tipoReservaRepository.save(TipoReserva)
+
+      return {
+        status: 200,
+        msg: 'Tipo de reserva actualizada',
+      }
+      
+    } catch (error) {
+
+      this.handleDBErrors(error);
+      
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tipoReserva`;
+  async actualizarEstado(id: string) {
+    
+    try {
+      const TipoReserva = await this.tipoReservaRepository.findOneBy({id})
+
+      if(!TipoReserva){
+
+        return new NotFoundException({
+          status: 404,
+          msg: 'El tipo de reserva que quieres eliminar, no existe',
+        });
+
+      }
+
+      if(TipoReserva.estado === false){
+        return new NotFoundException({
+          status: 404,
+          msg: 'El tipo de reserva que quieres eliminar, no existe',
+        });
+      }
+
+      TipoReserva.estado = false;
+
+      await this.tipoReservaRepository.save(TipoReserva);
+
+      return {
+        status: 200,
+        msg: 'Tipo de reserva eliminada',
+      }
+
+    } catch (error) {
+      this.handleDBErrors(error);
+    }
   }
 
   private handleDBErrors(error: any): never {

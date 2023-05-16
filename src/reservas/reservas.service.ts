@@ -14,6 +14,7 @@ import { ValidTipoReserva } from './interfaces/valid-tipo-reserva';
 import { ValidEstadoReserva } from './interfaces/valid-estado-reserva';
 import { EstadoReservaDto } from './dto/estado-Reserva.dto';
 import { ValidEstadoSala } from 'src/salas/interfaces/valid-estado-sala';
+import { PaginationReservaDto } from './dto/pagination-reserva.dto';
 
 @Injectable()
 export class ReservasService {
@@ -262,12 +263,14 @@ export class ReservasService {
     }
   }
   // TODO: obtener unicamente las reservas que estan en estado pendiente
-  async obtenerTodasReservasPendiente() {
+  async obtenerTodasReservasPendiente({ limit, offset }: PaginationReservaDto) {
     try {
       const reservas = await this.reservaRepository.find({
         where: {
           estadoReserva: ValidEstadoReserva.pendiente,
         },
+        skip: offset,
+        take: limit,
       });
 
       if (reservas) {
@@ -288,12 +291,14 @@ export class ReservasService {
   }
 
   // TODO: crear una ruta o servicio para  obtener unicamente las reservas que estan en estado rechazado
-  async obtenerTodasReservasRechazado() {
+  async obtenerTodasReservasRechazado({ limit, offset }: PaginationReservaDto) {
     try {
       const reservas = await this.reservaRepository.find({
         where: {
           estadoReserva: ValidEstadoReserva.rechazado,
         },
+        skip: offset,
+        take: limit,
       });
 
       if (reservas) {
@@ -315,12 +320,14 @@ export class ReservasService {
 
   // TODO: crear una ruta o servicio para  obtener unicamente las reservas que estan en estado aceptado
 
-  async obtenerTodasReservasAceptado() {
+  async obtenerTodasReservasAceptado({ limit, offset }: PaginationReservaDto) {
     try {
       const reservas = await this.reservaRepository.find({
         where: {
           estadoReserva: ValidEstadoReserva.aceptado,
         },
+        skip: offset,
+        take: limit,
       });
 
       if (reservas) {
@@ -340,16 +347,105 @@ export class ReservasService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} reserva`;
+  async findOne(id: string) {
+    try {
+      
+      const Reserva = await this.reservaRepository.findOneBy({id})
+
+      if(!Reserva){
+        return new NotFoundException({
+          status: 404,
+          msg: 'La reserva que estas buscando, no existe',}
+        )
+      }
+
+      if(Reserva.estado === false){
+        return new NotFoundException({
+          status: 404,
+          msg: 'La reserva que estas buscando, no existe',
+        });
+      }
+
+      return {
+        status: 200,
+        msg: 'Reserva obtenida',
+        Reserva,
+      };
+
+    } catch (error) {
+      this.handleDBErrors(error);      
+    }
   }
 
-  update(id: number, updateReservaDto: UpdateReservaDto) {
-    return `This action updates a #${id} reserva`;
+  async update(id: string, updateReservaDto: UpdateReservaDto) {
+
+    try {
+
+      const Reserva = await this.reservaRepository.preload({
+        id,
+        ...updateReservaDto,
+      });
+
+      if(!Reserva){
+        return new NotFoundException({
+          status: 404,
+          msg: 'La Reserva que quieres actualizar, no existe',
+        });        
+      }
+
+      if(Reserva.estado === false){
+        return new NotFoundException({
+          status: 404,
+          msg: 'La reserva que quieres actualizar, no existe',
+        });        
+      }
+
+      await this.reservaRepository.save(Reserva);
+
+      return {
+        status: 200,
+        msg: 'Reserva actualizada',
+      };
+
+    } catch (error) {
+      this.handleDBErrors(error);     
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} reserva`;
+ async actualizarEstado(id: string) {
+    try {
+      const Reserva = await this.reservaRepository.findOneBy({id});
+
+      if(!Reserva){
+
+        return new NotFoundException({
+          status: 404,
+          msg: 'La reserva que quieres eliminar, no existe',
+        });        
+
+      }
+
+      if(Reserva.estado === false){
+
+        return new NotFoundException({
+          status: 404,
+          msg: 'La sala que quieres eliminar, no existe',
+        });
+
+      }
+
+      Reserva.estado = false;
+
+      await this.reservaRepository.save(Reserva);
+
+      return {
+        status: 200,
+        msg: 'Reserva eliminada',
+      };
+
+    } catch (error) {
+      this.handleDBErrors(error); 
+    }
   }
 
   private handleDBErrors(error: any): never {

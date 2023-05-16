@@ -14,7 +14,7 @@ import { Sala } from './sala.entity';
 @Entity({ name: 'reserva' })
 export class Reserva {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string; 
 
 
   

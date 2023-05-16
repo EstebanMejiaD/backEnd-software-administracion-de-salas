@@ -214,6 +214,7 @@ export class SalasService {
         status: 200,
         msg: 'Sala actualizada',
       };
+      
     } catch (error) {
       this.handleDBErrors(error);
     }
