@@ -183,6 +183,7 @@ export class UsuariosService {
         where: { estado: true },
         skip: offset,
         take: limit,
+        select: ["id","role","nombre","apellido","email","estado","createdAt","updateAt"]
       });
       return {
         staus: 200,
@@ -208,21 +209,31 @@ export class UsuariosService {
 
   async findOne(id: string) {
     try {
-      const usuario: Usuario = await this.usuarioRepository.findOneBy({ id });
+      const usuario: Usuario = await this.usuarioRepository.findOne({where: {id},
+        select: ["id","role","nombre","apellido","email","estado","createdAt","updateAt"]})
 
       if (!usuario) {
-        return new NotFoundException(
-          'El usuario que estas buscando, no existe',
-        );
+        return new NotFoundException({
+          status: 404,
+          msg: 'El usuario que estas buscando, no existe',}
+        )
       }
 
       if (usuario.estado === false) {
-        return new NotFoundException(
-          'El usuario que estas buscando, no esta disponible',
-        );
+        return new NotFoundException({
+          status: 404,
+          msg: 'El usuario que estas buscando, no existe',}
+        )
       }
+      
+      return {
+        status: 200,
+        msg: 'Usuario obtenido',
+        usuario,
+      };
 
-      return usuario;
+
+
     } catch (error) {
       this.handleDBErrors(error);
     }
