@@ -185,10 +185,16 @@ export class UsuariosService {
         take: limit,
         select: ["id","role","nombre","apellido","email","estado","createdAt","updateAt"]
       });
+
+      const usuariosSinContraseña = usuarios.map(usuario => {
+        const { contraseña, ...usuarioSinContraseña } = usuario;
+        return usuarioSinContraseña;
+      });
+
       return {
         staus: 200,
         msg: 'Usuarios obtenidos satisfactoriamente',
-        usuarios
+        usuarios : usuariosSinContraseña
       }
     } catch (error) {
       this.handleDBErrors(error);
@@ -225,6 +231,8 @@ export class UsuariosService {
           msg: 'El usuario que estas buscando, no existe',}
         )
       }
+
+      const { contraseña, ...usuarioSinContraseña } = usuario;
       
       return {
         status: 200,
