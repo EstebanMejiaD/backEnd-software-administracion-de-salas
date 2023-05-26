@@ -12,7 +12,7 @@ export class TipoDocuentoController {
   constructor(private readonly tipoDocuentoService: TipoDocuentoService) {}
 
   @Post('Crear')
-  @Auth(ValidRoles.superUser)
+  // @Auth(ValidRoles.superUser)
   create(@Body() createTipoDocuentoDto: CreateTipoDocuentoDto) {
     return this.tipoDocuentoService.create(createTipoDocuentoDto);
   }
